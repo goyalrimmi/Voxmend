@@ -128,7 +128,7 @@ export default function DashboardPage() {
               </div>
 
               <button
-                onClick={() => alert("Video upload will be connected in the next step.")}
+                onClick={() => navigate("/upload")}
                 className="rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700"
               >
                 + Upload video
@@ -208,7 +208,7 @@ export default function DashboardPage() {
                 Upload a video to start building your distributed processing workflow.
               </p>
               <button
-                onClick={() => alert("Video upload will be connected in the next step.")}
+                onClick={() => navigate("/upload")}
                 className="mt-5 rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold hover:bg-slate-50"
               >
                 Select a video

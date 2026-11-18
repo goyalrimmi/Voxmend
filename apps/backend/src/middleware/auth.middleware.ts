@@ -6,11 +6,8 @@ export function authMiddleware(
     res: Response,
     next: NextFunction
 ) {
-    console.log("HEADERS: ", req.headers);
 
     const authHeader = req.headers.authorization;
-
-    console.log("AUTH HEADER: ", authHeader);
 
     if (!authHeader) {
         return res.status(401).json({
@@ -18,13 +15,13 @@ export function authMiddleware(
         });
     }
 
-    const token = authHeader.split(" ")[1];
-
-    if (!token) {
+    const [schema, token] = authHeader.split(" ");
+    if (schema !== "Bearer" || !token) {
         return res.status(401).json({
-            message: "Unauthorized, token not found",
+            message: "Invalid authorization header",
         });
     }
+
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
         throw new Error("JWT_SECRET is not defined");
@@ -35,7 +32,6 @@ export function authMiddleware(
             token,
             jwtSecret,
         );
-        console.log(decoded);
         req.user = decoded as {
             id: string;
             email: string;

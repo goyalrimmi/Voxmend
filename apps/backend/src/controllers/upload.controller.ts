@@ -25,7 +25,7 @@ export async function createUploadUrl(req: Request, res: Response) {
             });
         }
 
-        const videoKey = `videos/${randomUUID()}`;
+        const videoKey = `videos/${req.user!.id}/${randomUUID()}`;
 
         const command = new PutObjectCommand({
             Bucket: bucketName,
