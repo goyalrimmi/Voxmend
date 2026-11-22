@@ -7,6 +7,13 @@ datasource db {
   provider = "postgresql"
 }
 
+enum VideoStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
 model User {
   id           String   @id @default(uuid())
   name         String
@@ -15,17 +22,18 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  videos       Video[]
+  videos Video[]
 }
 
 model Video {
-  id String @id @default(uuid())
-  fileName String
-  storageKey String @unique
+  id          String      @id @default(uuid())
+  fileName    String
+  storageKey  String      @unique
   contentType String
-  size Int
-  userId String
-  createdAt DateTime @default(now())
+  size        Int
+  status      VideoStatus @default(PENDING)
+  userId      String
+  createdAt   DateTime    @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

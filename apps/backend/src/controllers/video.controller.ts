@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { HeadObjectCommand } from "@aws-sdk/client-s3";
 import prisma from "../config/prisma.js";
 import { s3Client } from "../config/s3.js";
+import { videoQueue } from "../queues/video.queue.js";
 
 const bucketName = process.env.S3_BUCKET_NAME;
 
@@ -72,11 +73,23 @@ export async function registerVideo(req: Request, res: Response) {
             },
         });
 
+        const job = await videoQueue.add(
+            "process-video",
+            {
+                videoId: video.id,
+                storageKey: video.storageKey,
+                userId: video.userId,
+            }
+        );
+
         return res.status(201).json({
             success: true,
-            message: "Video registered successfully",
+            message: "Video registered and processing job queued",
             video,
+            jobId: job.id,
         });
+
+
 
     } catch (error) {
         if (
